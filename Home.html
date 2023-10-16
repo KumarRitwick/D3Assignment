@@ -1,30 +1,97 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="stylesheet" href="./Styles/Home.css">
+        <script src="./Scripts/home.js"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <script type ="text/javascript" src = "https://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/topojson.v0.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300&display=swap" rel="stylesheet">
         <title>
             Towns
         </title>
-    </head>
-    <body>
+    </head> -->
+    <!-- <body> -->
         <!-- Navigation Starts Here -->
-        <nav class="navbar navbar-expand-lg" id="navMenu">
+        <!-- <nav class="navbar navbar-expand-lg" id="navMenu">
             <div class="collapse navbar-collapse">
                 <div class="navbar nav">
                     <a class="nav-item nav-link active navMenuColor" href="./Home.html"><i class="fas fa-home"></i> Home &nbsp;</a>
                     <a class="nav-item nav-link active navMenuColor" href="./About.html"><i class="fas fa-gamepad"></i> About &nbsp;</a>
                 </div>
             </div>
-        </nav>
+        </nav> -->
         <!-- Body Content Starts Here -->
-        <div class="container-fluid">
-            
+        <!-- <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="imageDivision"></p>
+                </div>
+            </div>
         </div>
-    </body>
+    </body> -->
+<!-- </html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>My map</title>
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+<link rel="stylesheet" type="text/css" href="map.css">
+<style></style>
+</head>
+<body>
+    <div id="container" class="svg-container"></div>
+    <script type="text/javascript">
+    var w = 1400;
+    var h = 700;
+    var svg = d3.select("div#container").append("svg").attr("preserveAspectRatio", "xMinYMin meet").style("background-color","#c9e8fd")
+    .attr("viewBox", "0 0 " + w + " " + h)
+    .classed("svg-content", true);
+    var projection = d3.geoMercator().translate([w/2, h/2]).scale(2200).center([0,40]);
+    var path = d3.geoPath().projection(projection);
+
+  // load data  
+var worldmap = d3.json("countries.geojson");
+var cities = d3.csv("cities.csv");
+
+Promise.all([worldmap, cities]).then(function(values){    
+ // draw map
+    svg.selectAll("path")
+        .data(values[0].features)
+        .enter()
+        .append("path")
+        .attr("class","continent")
+        .attr("d", path),
+ // draw points
+    svg.selectAll("circle")
+        .data(values[1])
+        .enter()
+        .append("circle")
+        .attr("class","circles")
+        .attr("cx", function(d) {return projection([d.Longitude, d.Lattitude])[0];})
+        .attr("cy", function(d) {return projection([d.Longitude, d.Lattitude])[1];})
+        .attr("r", "1px"),
+ // add labels
+    svg.selectAll("text")
+        .data(values[1])
+        .enter()
+        .append("text")
+        .text(function(d) {
+                    return d.City;
+               })
+        .attr("x", function(d) {return projection([d.Longitude, d.Lattitude])[0] + 5;})
+        .attr("y", function(d) {return projection([d.Longitude, d.Lattitude])[1] + 15;})
+        .attr("class","labels");
+
+    });
+
+</script>
+</body>
 </html>
