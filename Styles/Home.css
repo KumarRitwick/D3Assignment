@@ -1,0 +1,13 @@
+.country{
+    fill:#ffc670;
+    stroke: #150753;
+    stroke-width: 0.5;
+}
+
+body {
+    background: #dcaeae;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+    
