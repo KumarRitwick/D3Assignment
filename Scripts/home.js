@@ -26,22 +26,59 @@ function drawMap(data){
      .attr('class', 'country')
      .attr('d', path);
 
-     loadDataForTowns(svg, mapGroup, path);
+     loadDataForTowns(svg, mapGroup, path, projection);
 
 }
 
-function drawTowns(data, svg, mapGroup, path){
-    // console.log(data);
+function drawTowns(data, svg, mapGroup, path, projection){
+    console.log("Data For Towns:: ", data);
+    //Drawing Cities on UK Map
+
+    svg.selectAll('.cities')
+      .data(data)
+      .enter()
+      .append('circle')
+      .attr('class', 'cities')
+      .attr('r', 5)
+      .attr('cx', function (d) {
+        var coords = projection([d.lng, d.lat]);
+        return coords[0];
+      })
+
+      .attr('cy', function (d) {
+        var coords = projection([d.lng, d.lat]);
+        return coords[1];
+      });
+
+    // Add city names to map
+    svg.selectAll('.city_name')
+      .data(data)
+      .enter()
+      .append('text')
+      .attr('class', 'city_name')
+      .attr('x', function (d) {
+        var coords = projection([d.lng, d.lat]);
+        return coords[0] + 10;
+      })
+
+      .attr('y', function (d) {
+        var coords = projection([d.lng, d.lat]);
+        return coords[1];
+      })
+
+      .text(function (d) {
+        return d.Town;
+      });
 
 }
 
-function loadDataForTowns(svg, mapGroup, path){
+function loadDataForTowns(svg, mapGroup, path, projection){
     d3.json("http://34.38.72.236/Circles/Towns/5", function(error, data){
         if(error){
             console.log("Error in loading Town Populations:: ", error);
         }
         else{
-            drawTowns(data,svg, mapGroup, path);
+            drawTowns(data,svg, mapGroup, path, projection);
         }
     });
 }
