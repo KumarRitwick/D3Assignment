@@ -1,16 +1,17 @@
-function drawMap(data){
+function drawMap(data, townNumber){
     var mapGroup;
     var path;
-    var svg;
+    var svg = undefined;
     Width=700;
     Height=600;
     //For first time load
     if ((typeof svg == 'undefined') ){
-        svg= d3.select("body").append("svg")
+        svg= d3.selectAll("p").append("svg")
         .attr("width",Width)
         .attr("height",Height);
      }  else {
          //Do Nothing
+         debugger;
      }
      var projection = d3.geoNaturalEarth1().translate([Width/2, Height/2])
      .scale(3000)
@@ -26,7 +27,7 @@ function drawMap(data){
      .attr('class', 'country')
      .attr('d', path);
 
-     loadDataForTowns(svg, mapGroup, path, projection);
+     loadDataForTowns(svg, mapGroup, path, projection, townNumber);
 
 }
 
@@ -72,8 +73,16 @@ function drawTowns(data, svg, mapGroup, path, projection){
 
 }
 
-function loadDataForTowns(svg, mapGroup, path, projection){
-    d3.json("http://34.38.72.236/Circles/Towns/5", function(error, data){
+function updateTownNumber(){
+    var townNumber = document.getElementById("numberOfTowns").value;
+    loadDataForMap(townNumber);
+    // loadDataForTowns(townNumber);
+}
+
+function loadDataForTowns(svg, mapGroup, path, projection, townNumber){
+    if(townNumber == undefined)
+        townNumber = 0;
+    d3.json("http://34.38.72.236/Circles/Towns/"+ townNumber, function(error, data){
         if(error){
             console.log("Error in loading Town Populations:: ", error);
         }
@@ -83,7 +92,7 @@ function loadDataForTowns(svg, mapGroup, path, projection){
     });
 }
 
-function loadDataForMap(){
+function loadDataForMap(townNumber){
     // d3.select("p").on("click", function(){
     //     // updateData();
     // });
@@ -91,7 +100,7 @@ function loadDataForMap(){
         if(error){
             console.log("Error in Map Import:: ",error)
         }else{
-            drawMap(data);
+            drawMap(data, townNumber);
         }
     })
 }
