@@ -27,21 +27,27 @@
         </nav>
         <!-- Body Content Starts Here -->
         <div class="container-fluid">
+          <div class="row" style="text-align: center;">
+            <div class="col-lg-4">
+              <div id="boundary">
+                <div class="Map"></div>
+                <div id="Tooltip" style="display:none;"></div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <input type="number" id="numberOfTowns" max="500" min="1"/>
+              <button class="btn btn-info" onclick="updateTownNumber()">Number Of Towns</button>
+            </div>
+            <div class="col-lg-4">
+              <label id="sliderDisplayVal">0</label>
+              <input type="range" min="1" max="100" value="0" id="sliderSize" oninput="updateSliderLabelVal()">
+            </div>
+          </div>
+          <br>
             <div class="row">
                 <div class="col-lg-12">
                     <p class="imageDivision"></p>
                 </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-4"></div>
-              <div class="col-lg-4">
-                <input type="number" id="numberOfTowns" max="500" min="1"/>
-                <button class="btn btn-info" onclick="updateTownNumber()">Number Of Towns</button>
-              </div>
-              <div class="col-lg-4">
-                <h5 id="slidernum">5</h5>
-                <input type="range" min="1" max="99" value="5" id="SizeSlider" oninput="UpdateValue()">
-              </div>
             </div>
         </div>
     </body>

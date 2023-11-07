@@ -32,18 +32,22 @@ function drawMap(data, townNumber){
 
 }
 
-function ChangeSlider(n){
-	var slidervalue =  document.getElementById("SizeSlider").value;
-	document.getElementById("SizeSlider").value = parseInt(slidervalue) + n;
-	UpdateValue();
+function updateSliderLabelVal(){
+	var sliderSizeValue =  document.getElementById("sliderSize").value;
+	var sliderDisplay = document.getElementById("sliderDisplayVal");
+  console.log("This is supposedly not working:: ", sliderSizeValue);
+  debugger;
+	sliderDisplay.innerText = sliderSizeValue;
+  loadDataForMap(sliderSizeValue);
 }
 
-function UpdateValue(){
-	var slidervalue =  document.getElementById("SizeSlider").value;
-	var sliderDisplay = document.getElementById("slidernum");
-	sliderDisplay.innerHTML = slidervalue;
-  var slidervalue =  document.getElementById("SizeSlider").value;
-  loadDataForMap(slidervalue);
+function showTooltip(x,y,text){
+	console.log(text);
+	let tooltip = document.getElementById("Tooltip");
+	tooltip.innerHTML = "<text>"+text+"</text>";
+	tooltip.style.display = "block";
+	tooltip.style.left = x + 15 + "px";
+	tooltip.style.top = y - 2080 + "px";
 }
 
 function drawTowns(data){
@@ -67,6 +71,7 @@ function drawTowns(data){
         var coords = projection([d.lng, d.lat]);
         return coords[1];
       })
+      .attr("onmousemove", function(d){var coords = projection([d.lng,d.lat]);var msg = "showTooltip("+coords[0]+","+coords[1]+","+'"Town Name: '+d.Town+"<br>Population: "+d.Population+'");'; return msg;})
       .style("opacity", 0)
       .transition()
       .duration(600)
@@ -103,7 +108,7 @@ function drawTowns(data){
 
 function updateTownNumber(){
     var townNumber = document.getElementById("numberOfTowns").value;
-    loadDataForMap(townNumber);
+    loadDataForTowns(townNumber);
 }
 
 function loadDataForTowns(townNumber){
