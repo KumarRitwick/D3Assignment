@@ -35,9 +35,8 @@ function drawMap(data, townNumber){
 function updateSliderLabelVal(){
 	var sliderSizeValue =  document.getElementById("sliderSize").value;
 	var sliderDisplay = document.getElementById("sliderDisplayVal");
-  console.log("This is supposedly not working:: ", sliderSizeValue);
-  debugger;
 	sliderDisplay.innerText = sliderSizeValue;
+  document.getElementById("numberOfTowns").value = sliderSizeValue;
   loadDataForMap(sliderSizeValue);
 }
 
@@ -108,6 +107,8 @@ function drawTowns(data){
 
 function updateTownNumber(){
     var townNumber = document.getElementById("numberOfTowns").value;
+    document.getElementById("sliderDisplayVal").innerText = townNumber;
+    document.getElementById("sliderSize").value = townNumber;
     loadDataForTowns(townNumber);
 }
 
