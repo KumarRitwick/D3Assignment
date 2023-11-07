@@ -1,9 +1,11 @@
+var mapGroup;
+var path;
+var svg;
+var projection;
+Width=700;
+Height=600;
 function drawMap(data, townNumber){
-    var mapGroup;
-    var path;
-    var svg = undefined;
-    Width=700;
-    Height=600;
+    
     //For first time load
     if ((typeof svg == 'undefined') ){
         svg= d3.selectAll("p").append("svg")
@@ -11,9 +13,8 @@ function drawMap(data, townNumber){
         .attr("height",Height);
      }  else {
          //Do Nothing
-         debugger;
      }
-     var projection = d3.geoNaturalEarth1().translate([Width/2, Height/2])
+     projection = d3.geoNaturalEarth1().translate([Width/2, Height/2])
      .scale(3000)
      .center([-5, 53]);
  
@@ -27,14 +28,16 @@ function drawMap(data, townNumber){
      .attr('class', 'country')
      .attr('d', path);
 
-     loadDataForTowns(svg, mapGroup, path, projection, townNumber);
+     loadDataForTowns(townNumber);
 
 }
 
-function drawTowns(data, svg, mapGroup, path, projection){
+function drawTowns(data){
     console.log("Data For Towns:: ", data);
     //Drawing Cities on UK Map
-
+    //Remove Older Cities everytime there's an update.
+    svg.selectAll("cities").transition().duration(600).style("opacity", 0).ease(d3.easeSinIn).remove();;
+    svg.selectAll('.cities').remove();
     svg.selectAll('.cities')
       .data(data)
       .enter()
@@ -49,8 +52,15 @@ function drawTowns(data, svg, mapGroup, path, projection){
       .attr('cy', function (d) {
         var coords = projection([d.lng, d.lat]);
         return coords[1];
-      });
+      })
+      .style("opacity", 0)
+      .transition()
+      .duration(600)
+      .style("opacity", 0.7);
 
+    //Remove Older Cities everytime there's an update.
+    svg.selectAll("city_name").transition().duration(600).style("opacity", 0).ease(d3.easeSinIn).remove();;
+    svg.selectAll('.city_name').remove();
     // Add city names to map
     svg.selectAll('.city_name')
       .data(data)
@@ -61,15 +71,17 @@ function drawTowns(data, svg, mapGroup, path, projection){
         var coords = projection([d.lng, d.lat]);
         return coords[0] + 10;
       })
-
       .attr('y', function (d) {
         var coords = projection([d.lng, d.lat]);
         return coords[1];
       })
-
       .text(function (d) {
         return d.Town;
-      });
+      })
+      .style("opacity", 0)
+      .transition()
+      .duration(600)
+      .style("opacity", 0.7);
 
 }
 
@@ -79,7 +91,7 @@ function updateTownNumber(){
     // loadDataForTowns(townNumber);
 }
 
-function loadDataForTowns(svg, mapGroup, path, projection, townNumber){
+function loadDataForTowns(townNumber){
     if(townNumber == undefined)
         townNumber = 0;
     d3.json("http://34.38.72.236/Circles/Towns/"+ townNumber, function(error, data){
@@ -87,7 +99,7 @@ function loadDataForTowns(svg, mapGroup, path, projection, townNumber){
             console.log("Error in loading Town Populations:: ", error);
         }
         else{
-            drawTowns(data,svg, mapGroup, path, projection);
+          drawTowns(data);
         }
     });
 }
