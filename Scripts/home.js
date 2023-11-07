@@ -2,7 +2,7 @@ var mapGroup;
 var path;
 var svg;
 var projection;
-Width=700;
+Width=1200;
 Height=600;
 function drawMap(data, townNumber){
     
@@ -32,6 +32,20 @@ function drawMap(data, townNumber){
 
 }
 
+function ChangeSlider(n){
+	var slidervalue =  document.getElementById("SizeSlider").value;
+	document.getElementById("SizeSlider").value = parseInt(slidervalue) + n;
+	UpdateValue();
+}
+
+function UpdateValue(){
+	var slidervalue =  document.getElementById("SizeSlider").value;
+	var sliderDisplay = document.getElementById("slidernum");
+	sliderDisplay.innerHTML = slidervalue;
+  var slidervalue =  document.getElementById("SizeSlider").value;
+  loadDataForMap(slidervalue);
+}
+
 function drawTowns(data){
     console.log("Data For Towns:: ", data);
     //Drawing Cities on UK Map
@@ -43,7 +57,7 @@ function drawTowns(data){
       .enter()
       .append('circle')
       .attr('class', 'cities')
-      .attr('r', 5)
+      .attr('r', function(d){return d.Population/16000})
       .attr('cx', function (d) {
         var coords = projection([d.lng, d.lat]);
         return coords[0];
@@ -56,7 +70,8 @@ function drawTowns(data){
       .style("opacity", 0)
       .transition()
       .duration(600)
-      .style("opacity", 0.7);
+      .style("opacity", 0.7)
+      .style("fill","#005f73");
 
     //Remove Older Cities everytime there's an update.
     svg.selectAll("city_name").transition().duration(600).style("opacity", 0).ease(d3.easeSinIn).remove();;
@@ -81,14 +96,14 @@ function drawTowns(data){
       .style("opacity", 0)
       .transition()
       .duration(600)
-      .style("opacity", 0.7);
+      .style("opacity", 0.7)
+      .style("fill","#005f73");
 
 }
 
 function updateTownNumber(){
     var townNumber = document.getElementById("numberOfTowns").value;
     loadDataForMap(townNumber);
-    // loadDataForTowns(townNumber);
 }
 
 function loadDataForTowns(townNumber){
@@ -105,9 +120,6 @@ function loadDataForTowns(townNumber){
 }
 
 function loadDataForMap(townNumber){
-    // d3.select("p").on("click", function(){
-    //     // updateData();
-    // });
     d3.json("https://yamu.pro/gb.json", function(error, data){
         if(error){
             console.log("Error in Map Import:: ",error)
